@@ -26,7 +26,7 @@ GO
 CREATE TABLE dbo.customers (
     customerId INT NOT NULL PRIMARY KEY, -- primary key column
     cust_name [NVARCHAR](30) NOT NULL,
-    cust_address [NVARCHAR](80) NOT NULL
+    cust_address [NVARCHAR](90) NOT NULL
     -- specify more columns here
     );
 GO
