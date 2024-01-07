@@ -102,7 +102,7 @@ jobs:
 
       # Run the reformat action
       - name: Reformat SQL Files
-        uses: credfeto/action-sql-format@master
+        uses: credfeto/action-sql-format@main
 
       - run: cat create-database.sql
 
@@ -111,4 +111,4 @@ jobs:
           git config --local user.email "<githubusername>@users.noreply.github.com"
           git config --local user.name "SQL Reformat Bot"
           git commit --all -m "Reformat SQL Files to common format." || true
-          git push origin master
+          git push origin main

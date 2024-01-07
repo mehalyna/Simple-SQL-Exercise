@@ -3,7 +3,7 @@
     {
       "name": "Check query file runs",
       "setup": "",
-      "run": "sqlcmd -S 127.0.0.1 -U SA -P Pa\\$\\$w0rd1234 -d master -i create-database.sql",
+      "run": "sqlcmd -S 127.0.0.1 -U SA -P Pa\\$\\$w0rd1234 -d main -i create-database.sql",
       "input": "",
       "output": "",
       "comparison": "included",
