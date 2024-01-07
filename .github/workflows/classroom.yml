@@ -90,25 +90,4 @@ jobs:
           git add '.github/badges'
           git commit -m "Add/Update badge" || exit 0
           git push origin badges
-
-  # lint sql files
-  reformat-sql:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout the source code so we have some files to look at.
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      # Run the reformat action
-      - name: Reformat SQL Files
-        uses: credfeto/action-sql-format@main
-
-      - run: cat create-database.sql
-
-      - name: Commit and push files
-        run: |
-          git config --local user.email "<githubusername>@users.noreply.github.com"
-          git config --local user.name "SQL Reformat Bot"
-          git commit --all -m "Reformat SQL Files to common format." || true
-          git push origin main
+ 
