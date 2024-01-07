@@ -1,0 +1,114 @@
+name: GitHub Classroom Workflow
+
+on:
+  push:
+    branches:
+    - '*'
+    - '!badges'
+
+env:
+  DBPASS: 'Pa$$w0rd1234'
+
+jobs:
+  build:
+    name: Autograding
+    runs-on: ubuntu-latest
+
+    # setup sql server service
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: ${{ env.DBPASS }}
+        ports:
+        - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P \"${SA_PASSWORD}\" -Q \"SELECT 1\" -b -o /dev/null"
+          --health-interval 10s
+          --health-timeout 3s
+          --health-retries 5
+          --health-start-period 10s
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: check docker containers
+        run: docker ps -a
+
+      - name: check sql server running
+        run: sqlcmd -S 127.0.0.1 -U SA -P 'Pa$$w0rd1234' -Q "SELECT NAME FROM sys.sysdatabases"
+
+      # add id to step so outputs can be referenced
+      - uses: education/autograding@v1
+        id: autograder
+      #   continue-on-error: true
+
+      # # fail job if autograder returns failed
+      # # outcome can be 'success', 'failure', 'cancelled', or 'skipped'
+      # # trigger fail either on !success or on failure depending on preference
+      # - name: check autograder pass fail
+      #   if: ${{ steps.autograder.outcome != 'success' }}
+      #   # if: ${{ steps.autograder.outcome == 'failure' }}
+      #   # if: ${{ failure }}
+      #   run: exit 1
+
+    outputs:
+      grading-score: ${{ steps.autograder.outputs.Points }}
+
+  # job to build custom status badges
+  build-badges:
+    name: Build Badges
+    runs-on: ubuntu-latest
+    if: always()
+    needs: build
+    steps:
+      # need to checkout whole repo
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # switch to badges branch
+      - run: git checkout badges || git checkout -b badges
+
+      # make dir for badges
+      - name: make badges dir
+        run: mkdir -p .github/badges
+
+      # create points bar
+      - name: make points bar
+        uses: markpatterson27/points-bar@v1
+        with:
+          points: ${{ needs.build.outputs.grading-score }}
+          path: '.github/badges/points-bar.svg'
+
+      # commit and push badge if score has changed
+      - name: Commit and push badge
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add '.github/badges'
+          git commit -m "Add/Update badge" || exit 0
+          git push origin badges
+
+  # lint sql files
+  reformat-sql:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the source code so we have some files to look at.
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Run the reformat action
+      - name: Reformat SQL Files
+        uses: credfeto/action-sql-format@master
+
+      - run: cat create-database.sql
+
+      - name: Commit and push files
+        run: |
+          git config --local user.email "<githubusername>@users.noreply.github.com"
+          git config --local user.name "SQL Reformat Bot"
+          git commit --all -m "Reformat SQL Files to common format." || true
+          git push origin master
