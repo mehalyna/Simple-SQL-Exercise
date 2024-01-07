@@ -3,8 +3,7 @@ name: GitHub Classroom Workflow
 on:
   push:
     branches:
-    - '*'
-    - '!badges'
+    - '*'    
 
 env:
   DBPASS: 'Pa$$w0rd1234'
