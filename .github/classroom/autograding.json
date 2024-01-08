@@ -89,6 +89,16 @@
       "comparison": "included",
       "timeout": 10,
       "points": 10
+    },
+    {
+    "name": "Check customerID as primary key in customers table",
+    "setup": "",
+    "run": "sqlcmd -S 127.0.0.1 -U sa -P Pa\\$\\$w0rd1234 -Q \"USE SimpleDB SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS ON INFORMATION_SCHEMA.KEY_COLUMN_USAGE.CONSTRAINT_NAME = INFORMATION_SCHEMA.TABLE_CONSTRAINTS.CONSTRAINT_NAME WHERE INFORMATION_SCHEMA.TABLE_CONSTRAINTS.TABLE_NAME = 'customers' AND INFORMATION_SCHEMA.TABLE_CONSTRAINTS.CONSTRAINT_TYPE = 'PRIMARY KEY' AND COLUMN_NAME = 'customerId'\"",
+    "input": "",
+    "output": "customerId",
+    "comparison": "included",
+    "timeout": 10,
+    "points": 10
     }
   ]
 }
