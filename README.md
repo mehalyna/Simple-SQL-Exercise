@@ -12,7 +12,8 @@ In this exercise, learners/lecturers will write queries that create a database a
 
 1. Still using `create-database.sql`, add a query that creates a table in `SimpleDB` called `customers`, that has attributes for customer name and address.
 
-    ![UML diagram](assets/SoWkIImgAStDuKhDAyaigLH8BYqkoSzDBIfMgEPIKD22yprJ56ni0hpjx82YkhfmgVYynDnK12yn9QKejRYOgvRB8JKl1MWi0000.svg)
+    ![image](https://github.com/mehalyna/Simple-SQL-Exercise/assets/39273210/ccd199d3-5f7c-4e81-94dd-eaaa0ace7c85)
+
 
 1. Push your changes back to your assignment GitHub repo. Remember to try to make your commits atomic and your commit messages descriptive.
 
